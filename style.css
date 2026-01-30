@@ -1,0 +1,282 @@
+/* style.css */
+:root {
+    --primary: #FF8C00; /* Оранжевый */
+    --secondary: #FF0080; /* Розовый */
+    --bg-dark: #1a1a1a;
+    /* Более прозрачное стекло для карточек */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-chin: rgba(255, 255, 255, 0.15); 
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --text-color: #ffffff;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* --- 1. АНИМИРОВАННЫЙ ГРАДИЕНТНЫЙ ФОН (Для всех кроме главной) --- */
+body.gradient-page {
+    /* Градиент 400% размера, чтобы было куда двигаться */
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #FF8C00, #FF0080);
+    background-size: 400% 400%;
+    /* 10s длительность, ease - плавность, infinite - бесконечно, 
+       alternate - заставляет анимацию идти ВПЕРЕД, а потом НАЗАД (плавный возврат) */
+    animation: gradientBG 10s ease infinite alternate;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- LOADER --- */
+.loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.loader-wrapper.hidden { opacity: 0; visibility: hidden; }
+.spinner {
+    width: 50px; height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid var(--secondary);
+    border-left: 5px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* --- NAVBAR --- */
+nav {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    padding: 15px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000;
+    background: linear-gradient(90deg, rgba(255, 140, 0, 0.8), rgba(255, 0, 128, 0.8));
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+.logo { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.nav-links { display: flex; gap: 20px; }
+.nav-btn {
+    text-decoration: none; color: white; padding: 10px 20px; border-radius: 30px;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    backdrop-filter: blur(5px); transition: all 0.3s ease; font-weight: 500;
+}
+.nav-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-2px); box-shadow: 0 8px 32px 0 rgba(255, 140, 0, 0.3); border-color: rgba(255, 255, 255, 0.4); }
+.nav-btn.active { background: white; color: var(--secondary); font-weight: bold; }
+
+/* --- ВИДЕО ФОН (Только для главной) --- */
+.video-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #000;
+}
+#video-blur-layer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: blur(25px) brightness(0.6); transform: scale(1.1);
+}
+#video-main-layer {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; z-index: 1; object-fit: contain;
+}
+@media (max-aspect-ratio: 1914/1080) { #video-main-layer { object-fit: cover; } }
+
+.hero-content {
+    position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; z-index: 2;
+}
+.hero-title {
+    font-size: 4rem; font-weight: 800; background: linear-gradient(to right, #fff, #ffe0b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px;
+}
+
+/* --- КОНТЕЙНЕР СТРАНИЦ --- */
+.page-container {
+    padding-top: 120px; /* Отступ больше, чтобы не прилипало к навбару */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 50px;
+}
+
+/* Стандартная карточка (для текста, как было раньше) */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+/* --- 2. СЕТКА ДЛЯ КАРТОЧЕК --- */
+.cards-grid {
+    display: grid;
+    /* Магия адаптивности: создает столько колонок, сколько влезет. 
+       Минимальная ширина карточки 280px, если меньше - перенос. */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 30px;
+    width: 100%;
+}
+
+/* --- 3. LIQUID GLASS КАРТОЧКА-ССЫЛКА --- */
+.glass-card-link {
+    display: block; /* Чтобы ссылка работала на всю карточку */
+    text-decoration: none;
+    color: white;
+    border-radius: 20px;
+    overflow: hidden; /* Чтобы картинка не вылезала за скругления */
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.glass-card-link:hover {
+    transform: translateY(-10px) scale(1.02); /* Поднятие и легкое увеличение */
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                0 0 20px rgba(255, 140, 0, 0.3); /* Оранжевое свечение */
+    border-color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+}
+
+/* Картинка внутри карточки */
+.card-image-wrapper {
+    width: 100%;
+    height: 180px; /* Фиксированная высота картинки */
+    overflow: hidden;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Заполнить рамку, обрезав лишнее */
+    transition: transform 0.5s ease;
+}
+
+.glass-card-link:hover .card-image-wrapper img {
+    transform: scale(1.1); /* Зум картинки при наведении */
+}
+
+/* "Подбородок" карточки */
+.card-chin {
+    padding: 20px;
+    background: var(--glass-chin); /* Чуть отличающийся фон */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.card-desc {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+}
+
+/* --- 4. ВЫПАДАЮЩИЙ СПИСОК (ACCORDION) --- */
+.glass-dropdown {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: background 0.3s;
+}
+
+.dropdown-header {
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    user-select: none;
+}
+
+.dropdown-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.arrow-icon {
+    transition: transform 0.3s ease;
+}
+
+/* Класс open добавляется JS */
+.glass-dropdown.open .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.glass-dropdown.open {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.3s;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.1); /* Чуть темнее внутри */
+}
+
+.glass-dropdown.open .dropdown-content {
+    /* Достаточно большое значение, JS можно не использовать для вычисления высоты */
+    max-height: 500px; 
+    opacity: 1;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 15px 20px;
+    color: #eee;
+    text-decoration: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transition: padding-left 0.2s, color 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 25px; /* Эффект сдвига вправо */
+    color: var(--primary);
+}
+
+/* Адаптив навбара */
+@media (max-width: 768px) {
+    nav { flex-direction: column; gap: 15px; padding: 15px; }
+    .nav-links { gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .hero-title { font-size: 2.5rem; }
+    .page-container { padding-top: 160px; } /* Больше места на мобилке из-за высокого навбара */
+}

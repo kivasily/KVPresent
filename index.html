@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KVPresent - Главная</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="loader-wrapper">
+        <div class="spinner"></div>
+    </div>
+
+    <nav>
+        <div class="logo">KVPresent</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-btn">Главная</a>
+            <a href="info.html" class="nav-btn">Инфо</a>
+            <a href="presentations.html" class="nav-btn">Презентации</a>
+            <a href="data.html" class="nav-btn">Данные</a>
+        </div>
+    </nav>
+
+    <div class="video-container">
+        <video autoplay muted loop playsinline id="video-blur-layer">
+            <source src="sakura_tree.mp4" type="video/mp4">
+        </video>
+
+        <video autoplay muted loop playsinline id="video-main-layer">
+            <source src="sakura_tree.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="hero-content">
+        <h1 class="hero-title">Добро пожаловать</h1>
+        <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+            Главный сайт KVPresent, где вы можете найти презентации, данные и полезную информацию.
+        </p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
