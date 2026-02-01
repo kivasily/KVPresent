@@ -1,0 +1,5 @@
+Название шрифтов, используемых в презентациях:
+1. X Company Regular
+2. Candara (Light)
+3. Minecraft Rus
+4. Bou Collegiate
