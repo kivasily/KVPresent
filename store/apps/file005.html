@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница Приложения - Visual Studio Code</title>
+    <style>
+        :root {
+            /* Цвета для кнопки (Голубой и Бледно-розовый) */
+            --btn-blue: #3b82f6; 
+            --btn-pink-pale: #fce7f3;
+            
+            /* Цвета текста */
+            --text-dark: #333333;
+            --text-light: #555555;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; /* Предотвращение горизонтальной прокрутки всей страницы */
+
+            /* ПЕРЕЛИВАЮЩИЙСЯ ФОН */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Навигация --- */
+        nav {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .nav-link {
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link:hover { opacity: 0.8; }
+
+        /* --- Контейнер приложения --- */
+        .app-container {
+            max-width: 600px;
+            width: 100%;
+            /* Отступы адаптируются на мобилках (см. media query внизу) */
+            padding: 40px 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            object-fit: cover;
+            background-color: #fff;
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            /* Перенос длинных заголовков на мобилках */
+            word-wrap: break-word; 
+        }
+
+        /* Мета-информация */
+        .app-meta {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 35px;
+            font-size: 14px;
+            flex-wrap: wrap; /* Чтобы не ломалось на очень узких экранах */
+        }
+
+        .app-meta span {
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            backdrop-filter: blur(5px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* --- КНОПКА СКАЧАТЬ --- */
+        .download-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            /* Паддинги адаптируются на мобилках (см. media query внизу) */
+            padding: 18px 70px; 
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            margin-bottom: 40px;
+            background: linear-gradient(90deg, var(--btn-blue), var(--btn-pink-pale), var(--btn-blue));
+            background-size: 200% auto;
+            animation: slowGlow 3s linear infinite;
+            transform: scale(1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            /* Важно для мобильной верстки, чтобы паддинги не рвали ширину */
+            box-sizing: border-box; 
+            max-width: 100%;
+        }
+
+        .download-btn:active { transform: scale(0.98); }
+
+        @keyframes slowGlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* --- Описание --- */
+        .glass-card {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            color: var(--text-dark);
+        }
+
+        .glass-card h3 { margin-top: 0; color: #222; }
+        .glass-card p { line-height: 1.6; color: var(--text-light); margin-bottom: 0; }
+
+        /* --- Скриншоты с оберткой для стрелок --- */
+        .screenshots-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .screenshots-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 5px 25px 5px; /* Немного места для теней и скроллбара */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+            scroll-behavior: smooth; /* Плавная прокрутка по JS */
+            width: 100%;
+        }
+        .screenshots-container::-webkit-scrollbar { display: none; }
+
+        /* Стили для ИЗОБРАЖЕНИЙ-скриншотов */
+        .screenshot-img {
+            /* Фиксированная высота, ширина авто по пропорциям */
+            height: 350px; 
+            width: auto;
+            /* Максимальная ширина на случай очень широких картинок */
+            max-width: 80vw; 
+            
+            border-radius: 16px;
+            flex-shrink: 0;
+            /* Стеклянная рамка вокруг картинки */
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            /* Чтобы картинка вела себя как блок */
+            display: block;
+        }
+        
+        .screenshot-img:hover {
+             transform: scale(1.02);
+        }
+
+        /* --- Стеклянные стрелки (Скрыты по умолчанию/на мобилках) --- */
+        .scroll-btn {
+            display: none; /* Скрыты на мобильных */
+            position: absolute;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: var(--text-dark);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 4px; /* Корректировка вертикального выравнивания стрелки */
+        }
+
+        .scroll-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .scroll-btn.left { left: -25px; }
+        .scroll-btn.right { right: -25px; }
+
+
+        /* =========================================
+           МОБИЛЬНАЯ ОПТИМИЗАЦИЯ (Все экраны <= 768px)
+           ========================================= */
+        @media (max-width: 768px) {
+            /* Уменьшаем отступы контейнера */
+            .app-container {
+                padding: 25px 15px;
+            }
+
+            /* Чуть меньше заголовок */
+            .app-title {
+                font-size: 24px;
+            }
+
+            /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ КНОПКИ */
+            .download-btn {
+                width: 90%; /* Почти во всю ширину */
+                padding: 16px 20px; /* Убираем огромные боковые паддинги */
+                font-size: 18px;
+            }
+            
+            /* Уменьшаем скриншоты для мобилок, чтобы влезало больше */
+             .screenshot-img {
+                height: 280px;
+            }
+        }
+
+        /* Показываем стрелки ТОЛЬКО на десктопе (> 769px) */
+        @media (min-width: 769px) {
+            .scroll-btn {
+                display: flex; 
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="../store.html" class="nav-link">← Store</a>
+        <a href="../../index.html" class="nav-link">Главная</a>
+    </nav>
+
+    <div class="app-container">
+        <img src="../../data/img/vsc.png" alt="App Icon" class="app-icon">
+        
+        <h1 class="app-title">Visual Studio Code</h1>
+        
+        <div class="app-meta">
+            <span class="developer">Dev: Microsoft</span>
+            <span class="version">v.official-last</span>
+        </div>
+
+        <a href="https://code.visualstudio.com/" class="download-btn">Скачать</a>
+
+        <div class="glass-card">
+            <h3>О приложении</h3>
+            <p>Visual Studio Code (VS Code) - лучший AI редактор кода. Подходит для всех языков программирования, и всех типов файлов.</p>
+        </div>
+
+        <div class="screenshots-wrapper">
+            <button class="scroll-btn left" id="slideLeft">←</button>
+
+            <div class="screenshots-container" id="scrollContainer">
+                <img src="../../data/img/vsc1.png" alt="Screenshot 1" class="screenshot-img">
+               <img src="../../data/img/vsc2.png" alt="Screenshot 2" class="screenshot-img">
+               <img src="../../data/img/vsc3.png" alt="Screenshot 3" class="screenshot-img">
+            </div>
+
+            <button class="scroll-btn right" id="slideRight">→</button>
+        </div>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('scrollContainer');
+        const buttonRight = document.getElementById('slideRight');
+        const buttonLeft = document.getElementById('slideLeft');
+
+        buttonRight.onclick = function () {
+            // Прокрутка на 250px вправо
+            container.scrollBy({ left: 250, behavior: 'smooth' });
+        };
+        buttonLeft.onclick = function () {
+            // Прокрутка на 250px влево
+            container.scrollBy({ left: -250, behavior: 'smooth' });
+        };
+    </script>
+
+</body>
+</html>
